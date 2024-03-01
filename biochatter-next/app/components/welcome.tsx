@@ -20,10 +20,9 @@ export function Welcome() {
 
   function checkUpdate(force = false) {
     updateStore.getLatestVersion(force).then(() => {
+      console.log("[Update] local version ", updateStore.version);
+      console.log("[Update] remote version ", updateStore.remoteVersion);
     });
-
-    console.log("[Update] local version ", updateStore.version);
-    console.log("[Update] remote version ", updateStore.remoteVersion);
   }
 
   useEffect(() => {

@@ -18,7 +18,7 @@ services:
  
   flask-app:
     container_name: biochatter-server
-    image: biocypher/biochatter-server:0.2.6
+    image: biocypher/biochatter-server:0.2.8
     env_file:
       - .bioserver.env
     ports:
@@ -29,11 +29,11 @@ services:
     environment:
       - HOST=standalone
       - PORT=19530
-      - KGHOST=pole
+      - KGHOST=biocypher
       - KGPORT=7687
     depends_on:
       - "standalone"
-      - "pole"
+      - "biocypher"
 
   etcd:
     container_name: milvus-etcd
@@ -78,8 +78,8 @@ services:
       - "etcd"
       - "minio"
 
-  pole:
-    container_name: neo4j-pole
+  biocypher:
+    container_name: biocypher
     image: biocypher/neo4j-pole:0.1.0
     environment:
       NEO4J_dbms_security_auth__enabled: "false"
