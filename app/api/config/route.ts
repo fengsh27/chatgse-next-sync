@@ -17,6 +17,7 @@ const DANGER_CONFIG = {
   disableFastLink: serverConfig.disableFastLink,
   customModels: serverConfig.customModels,
   productionInfo: "undefined",
+  subPath: serverConfig.subPath,
 };
 
 declare global {
