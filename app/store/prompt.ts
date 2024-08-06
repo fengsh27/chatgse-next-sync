@@ -149,7 +149,8 @@ export const usePromptStore = createPersistStore(
 
     onRehydrateStorage(state) {
       // const PROMPT_URL = "./prompts.json";
-      const PROMPT_URL = getFetchUrl('/biochatter-next', "/prompts.json");
+      const subPath = "/cancer-genetics"
+      const PROMPT_URL = getFetchUrl(subPath, "/prompts.json");
 
       type PromptList = Array<[string, string]>;
 

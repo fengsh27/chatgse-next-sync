@@ -74,7 +74,7 @@ export const getServerSideConfig = () => {
 
   return {
     baseUrl: process.env.BASE_URL,
-    subPath: process.env.SUBPATH??"/biochatter-next",
+    subPath: process.env.SUBPATH??"/cancer-genetics",
     apiKey,
     openaiOrgId: process.env.OPENAI_ORG_ID,
 

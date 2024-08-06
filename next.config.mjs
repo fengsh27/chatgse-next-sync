@@ -34,7 +34,7 @@ const nextConfig = {
   experimental: {
     forceSwcTransforms: true,
   },
-  basePath: "/biochatter-next",
+  basePath: "/cancer-genetics",
 };
 
 const CorsHeaders = [
@@ -86,6 +86,6 @@ if (mode !== "export") {
   };
 }
 
-nextConfig.basePath = "/biochatter-next";
+nextConfig.basePath = "/cancer-genetics";
 
 export default nextConfig;
