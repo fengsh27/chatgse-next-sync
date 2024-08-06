@@ -45,7 +45,7 @@ export enum FileName {
 }
 
 export enum StoreKey {
-  Chat = "biochatter-next",
+  Chat = "cancer-genetics",
   Access = "access-control",
   Config = "app-config",
   Mask = "mask-store",
