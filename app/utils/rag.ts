@@ -18,7 +18,7 @@ const getConnectionArgsToDisplay = (
       && (serverPort === connectionArgsPort) ) {
       return {
         host: server.server,
-        port: server.port ?? defaultPort,
+        port: serverPort,
       }
     }
   }
