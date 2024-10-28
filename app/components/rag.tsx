@@ -258,7 +258,7 @@ export function RAGPage() {
                     </div>
                   ) : (<></>)}
                   <div className={styles["documents"]}>
-                    <ul>
+                    <ul style={{listStyleType: "square"}}>
                       {documents.map((doc) => (
                         <li key={doc.id ?? ""}>
                           <DocumentComponent doc={doc} removable={!globalVS} />
