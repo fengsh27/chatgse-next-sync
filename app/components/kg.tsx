@@ -15,7 +15,7 @@ import Locale from "../locales";
 
 import { ERROR_BIOSERVER_OK } from "../constant";
 import { DbConfiguration, DbServerSettings, } from "../utils/datatypes";
-import { requestKGConnectionStatus } from "../client/datarequest";
+import { requestKGConnectionStatus, requestTokenUsage } from "../client/datarequest";
 import {Markdown} from "./markdown";
 import { ErrorBoundary } from "./error";
 import styles from "./kg.module.scss";
@@ -60,6 +60,12 @@ export function KGPage() {
         })
       }
     }
+
+    requestTokenUsage().then((res) => {
+      res.json().then((dat) => {
+        console.dir(dat);
+      });
+    });
   }, []);
 
   const updateConnectionStatus = useDebouncedCallback(async () => {    

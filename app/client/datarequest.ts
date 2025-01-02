@@ -122,3 +122,23 @@ export const requestRemoveDocument = async (
   });
   return res;
 }
+
+export const requestTokenUsage = async (
+  model?: string
+) => {
+  const TokenUsage_URL = ApiPath.TokenUsage;
+  let url = TokenUsage_URL as string;
+  if (!url.endsWith('/')) {
+    url += '/';
+  }
+  const res = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify({
+      "model": model ?? "gpt-3.5-turbo",
+    }),
+    headers: {
+      ...get_auth_header()
+    }
+  });
+  return res;
+}

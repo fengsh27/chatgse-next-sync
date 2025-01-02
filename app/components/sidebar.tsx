@@ -20,6 +20,8 @@ import AutoIcon from "../icons/auto.svg";
 
 import Locale from "../locales";
 
+import { requestTokenUsage } from "../client/datarequest";
+
 import { useAppConfig, useChatStore, Theme } from "../store";
 
 import {
@@ -143,6 +145,7 @@ export function SideBar(props: { className?: string }) {
     accessStore.productionInfo === "undefined" ? 
     undefined : 
     (JSON.parse(accessStore.productionInfo) as any) as ProductionInfo;
+  const currentModel = chatStore.currentSession().mask.modelConfig.model ?? "gpt-3.5-turbo";
   const kgProdInfo = getKnowledgeGraphInfo(prodInfo); 
   const ragProdInfo = getVectorStoreInfo(prodInfo); 
   const mask = getMaskInfo(prodInfo);
@@ -159,6 +162,17 @@ export function SideBar(props: { className?: string }) {
   );
 
   useHotKey();
+
+  useEffect(() => {
+    requestTokenUsage(currentModel).then((res: any) => {
+      res.json().then((dat: any) => {
+        accessStore.tokenUsage.auth_type = dat.auth_type ?? "Unknown";
+        accessStore.tokenUsage.tokens.completion_tokens = dat.tokens?.completion_tokens ?? 0;
+        accessStore.tokenUsage.tokens.prompt_tokens = dat.tokens?.prompt_tokens ?? 0;
+        accessStore.tokenUsage.tokens.total_tokens = dat.tokens?.total_tokens ?? 0;
+      });
+    });
+  });
 
   // switch themes
   function nextTheme() {
@@ -238,6 +252,7 @@ export function SideBar(props: { className?: string }) {
       </div>
 
       <div className={styles["sidebar-header-bar"]}>
+        <div className={styles["sidebar-bar-buttons"]}>
         <IconButton
           disabled={!ragProdInfo.enabled}
           icon={<RagIcon width={16} height={16} />}
@@ -258,6 +273,17 @@ export function SideBar(props: { className?: string }) {
           }}
           shadow
         />
+        </div>
+        {!shouldNarrow && (
+          <div className={styles["sidebar-token-usage"]}>
+          {accessStore.tokenUsage.auth_type.slice(0, 6) === "Server" ? (
+            <div style={{fontSize: "14px", marginBottom: "10px"}}>Server token usage</div>
+          ) : (
+            <div style={{fontSize: "14px", marginBottom: "10px"}}>Client token usage</div>
+          )}
+          <div>Total tokens: {accessStore.tokenUsage.tokens.total_tokens}</div>
+          </div>
+        )}
       </div>
       <div className={styles["sidebar-tail"]}>
         <div className={styles["sidebar-actions"]}>

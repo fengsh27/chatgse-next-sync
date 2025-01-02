@@ -32,6 +32,7 @@ export enum ApiPath {
   OpenAI = "/api/openai",
   RAG = "/api/rag",
   KG = "/api/kg",
+  TokenUsage = "/api/tokenusage"
 }
 
 export enum SlotID {
@@ -91,6 +92,7 @@ export const BiochatterPath = {
   Document: "v1/rag/document",
   RAGConnectionStatus: "v1/rag/connectionstatus",
   KGConnectionStatus: "v1/kg/connectionstatus",
+  TokenUsage: "v1/tokenusage",
 }
 
 export const Azure = {

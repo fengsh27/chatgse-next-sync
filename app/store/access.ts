@@ -37,6 +37,14 @@ const DEFAULT_ACCESS_STATE = {
   disableFastLink: false,
   customModels: "",
   productionInfo: "undefined",
+  tokenUsage: {
+    auth_type: "Unknown",
+    tokens: {
+      "completion_tokens": 0,
+      "prompt_tokens": 0,
+      "total_tokens": 0,
+    }
+  }
 };
 
 export const useAccessStore = createPersistStore(

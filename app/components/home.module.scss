@@ -66,13 +66,19 @@
 
   .sidebar-header-bar {
     display: flex;
+    flex-direction: column;
     margin-bottom: 20px;
 
-    .sidebar-bar-button {
-      flex-grow: 1;
+    .sidebar-bar-buttons {
+      display: flex;
+      flex-direction: row;
 
-      &:not(:last-child) {
-        margin-right: 10px;
+      .sidebar-bar-button {
+        flex-grow: 1;
+  
+        &:not(:last-child) {
+          margin-right: 10px;
+        }
       }
     }
   }
@@ -190,6 +196,13 @@
   flex: 1;
   overflow: auto;
   overflow-x: hidden;
+}
+
+.sidebar-token-usage {
+  border: var(--border-in-light);
+  border-radius: 10px;
+  padding: 10px;
+  margin: 20px 0 0 0;
 }
 
 .chat-item {
