@@ -251,8 +251,10 @@ export function SideBar(props: { className?: string }) {
         <ChatList narrow={shouldNarrow} />
       </div>
 
-      <div className={styles["sidebar-header-bar"]}>
-        <div className={styles["sidebar-bar-buttons"]}>
+      <div className={styles["sidebar-footer-bar"]}>
+        <div 
+          className={styles["sidebar-bar-buttons"]}
+        >
         <IconButton
           disabled={!ragProdInfo.enabled}
           icon={<RagIcon width={16} height={16} />}
