@@ -19,7 +19,10 @@ async function handle(request: NextRequest) {
           [AUTHORIZATION]: authValue,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({model: data.model??"gpt-3.5-turbo"}),
+        body: JSON.stringify({
+          model: data.model ?? "gpt-3.5-turbo",
+          session_id: data.session_id ?? "",
+        }),
       }
     );
     const jsonBody = await res.json();

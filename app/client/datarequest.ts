@@ -124,6 +124,7 @@ export const requestRemoveDocument = async (
 }
 
 export const requestTokenUsage = async (
+  session_id?: string,
   model?: string
 ) => {
   const TokenUsage_URL = ApiPath.TokenUsage;
@@ -134,6 +135,7 @@ export const requestTokenUsage = async (
   const res = await fetch(url, {
     method: "POST",
     body: JSON.stringify({
+      "session_id": session_id ?? "",
       "model": model ?? "gpt-3.5-turbo",
     }),
     headers: {
