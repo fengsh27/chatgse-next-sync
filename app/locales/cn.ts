@@ -119,6 +119,7 @@ const cn = {
       RAG: "",
       KG: "",
     },
+    TokenLimit: (x: any) => `The server's community daily token limit (${x} tokens) has been reached.  \n\n Please provide your OpenAI API key on the [auth](/#/auth) page to continue.`,
   },
   Export: {
     Title: "分享聊天记录",

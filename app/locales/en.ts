@@ -121,6 +121,7 @@ const en: LocaleType = {
       RAG: "Calling RAG",
       KG: "Calling KG RAG",
     },
+    TokenLimit: (x: any) => `The server's community daily token limit (${x} tokens) has been reached.  \n\n Please provide your OpenAI API key on the [auth](/#/auth) page to continue.`,
   },
   Export: {
     Title: "Export Messages",
