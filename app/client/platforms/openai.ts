@@ -2,7 +2,7 @@ import {
   ApiPath,
   DEFAULT_API_HOST,
   DEFAULT_MODELS,
-  ERROR_BIOSERVER_EXCEEDS_TOKEN_USAGE,
+  ERROR_BIOSERVER_EXCEEDS_TOKEN_LIMIT,
   OpenaiPath,
   REQUEST_TIMEOUT_MS,
   ServiceProvider,
@@ -234,7 +234,7 @@ export class ChatGPTApi implements LLMApi {
         clearTimeout(requestTimeoutId);
 
         const resJson = await res.json();
-        if (resJson.code === ERROR_BIOSERVER_EXCEEDS_TOKEN_USAGE && options.onFinish) {
+        if (resJson.code === ERROR_BIOSERVER_EXCEEDS_TOKEN_LIMIT && options.onFinish) {
           options.onFinish(Locale.Chat.TokenLimit(resJson.limitation));
           return;
         }
