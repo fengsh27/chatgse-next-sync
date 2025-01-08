@@ -218,7 +218,7 @@ export function Home({subPath}: {subPath: string}) {
 
   useEffect(() => {
     console.log("[Config] got config from build time", getClientConfig());
-    useAccessStore.getState().fetch().then(() => {
+    useAccessStore.getState().fetch(subPath).then(() => {
       const strProdInfo = useAccessStore.getState().productionInfo;
       const theProdInfo: ProductionInfo | undefined = 
         strProdInfo === "undefined" ? undefined : JSON.parse(strProdInfo);

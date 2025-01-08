@@ -38,20 +38,6 @@ export function selectServerInfoFromDbConnectionArgs(
   ));
 }
 
-export function selectServerInfoFromDbConnectionArgs(
-  dbConfig: DbConfiguration, 
-  connectionArgs: DbConnectionArgs
-): DbServerSettings | undefined {
-  if (!dbConfig.servers || dbConfig.servers.length === 0) {
-    return;
-  }
-  return dbConfig.servers.find((server) => (
-    (server.address === connectionArgs.host ||
-    server.server === connectionArgs.host) &&
-    server.port === connectionArgs.port
-  ));
-}
-
 export function getWelcomeAbout(prodInfo?: ProductionInfo): Record<string, any> | undefined {
   if (prodInfo) {
     return prodInfo?.Text?.Welcome?.About;
