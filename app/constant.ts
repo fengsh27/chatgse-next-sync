@@ -32,6 +32,7 @@ export enum ApiPath {
   OpenAI = "/api/openai",
   RAG = "/api/rag",
   KG = "/api/kg",
+  TokenUsage = "/api/tokenusage"
 }
 
 export enum SlotID {
@@ -91,6 +92,7 @@ export const BiochatterPath = {
   Document: "v1/rag/document",
   RAGConnectionStatus: "v1/rag/connectionstatus",
   KGConnectionStatus: "v1/kg/connectionstatus",
+  TokenUsage: "v1/tokenusage",
 }
 
 export const Azure = {
@@ -117,59 +119,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
 
 export const DEFAULT_MODELS = [
   {
-    name: "gpt-4",
-    available: true,
-  },
-  {
-    name: "gpt-4-0314",
-    available: true,
-  },
-  {
-    name: "gpt-4-0613",
-    available: true,
-  },
-  {
-    name: "gpt-4-32k",
-    available: true,
-  },
-  {
-    name: "gpt-4-32k-0314",
-    available: true,
-  },
-  {
-    name: "gpt-4-32k-0613",
-    available: true,
-  },
-  {
-    name: "gpt-4-1106-preview",
-    available: true,
-  },
-  {
-    name: "gpt-4-vision-preview",
-    available: true,
-  },
-  {
-    name: "gpt-3.5-turbo",
-    available: true,
-  },
-  {
-    name: "gpt-3.5-turbo-0301",
-    available: true,
-  },
-  {
-    name: "gpt-3.5-turbo-0613",
-    available: true,
-  },
-  {
-    name: "gpt-3.5-turbo-1106",
-    available: true,
-  },
-  {
-    name: "gpt-3.5-turbo-16k",
-    available: true,
-  },
-  {
-    name: "gpt-3.5-turbo-16k-0613",
+    name: "gpt-4o",
     available: true,
   },
 ] as const;
@@ -179,9 +129,10 @@ export const MAX_RENDER_MSG_COUNT = 45;
 
 // biochatter-server error
 export const ERROR_BIOSERVER_OK = 0
-export const ERROR_BIOSERVER_UNKNOWN = 5000
+export const ERROR_BIOSERVER_UNKNOWN = 5100
 export const ERROR_BIOSERVER_MILVUS_UNKNOWN = 5101
 export const ERROR_BIOSERVER_MILVUS_CONNECT_FAILED = 5102
+export const ERROR_BIOSERVER_EXCEEDS_TOKEN_LIMIT = 5103
  
 export const HDR_CONTENT_TYPE = "Content-Type";
 export const HDR_APPLICATION_JSON = "application/json";

@@ -37,7 +37,7 @@ export const requestKGConnectionStatus = async (
 
 export const requestAllVSDocuments = async (
   connectionArgs: DbConnectionArgs,
-  docIds: string[],
+  docIds?: string[],
   subPath?: string,
 ) => {
   const RAG_URL = ApiPath.RAG;
@@ -122,6 +122,29 @@ export const requestRemoveDocument = async (
   const res = await fetch(delPath, {
     method: "DELETE",
     body: JSON.stringify({ docId, connectionArgs, docIds}),
+    headers: {
+      ...get_auth_header()
+    }
+  });
+  return res;
+}
+
+export const requestTokenUsage = async (
+  session_id?: string,
+  model?: string,
+  subPath?: string,
+) => {
+  const TokenUsage_URL = ApiPath.TokenUsage;
+  let url = getFetchUrl(subPath??"", TokenUsage_URL as string);
+  if (!url.endsWith('/')) {
+    url += '/';
+  }
+  const res = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify({
+      "session_id": session_id ?? "",
+      "model": model ?? "gpt-3.5-turbo",
+    }),
     headers: {
       ...get_auth_header()
     }

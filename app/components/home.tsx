@@ -28,7 +28,16 @@ import { useAppConfig } from "../store/config";
 import { AuthPage } from "./auth";
 import { getClientConfig } from "../config/client";
 import { api } from "../client/api";
-import { useAccessStore } from "../store";
+import { useAccessStore, useChatStore } from "../store";
+import { ProductionInfo } from "../utils/datatypes";
+import { 
+  getKnowledgeGraphInfo, 
+  getLLMModels, 
+  getMaskInfo, 
+  getVectorStoreInfo 
+} from "../utils/prodinfo";
+import { useRAGStore } from "../store/rag";
+import { useKGStore } from "../store/kg";
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
@@ -209,7 +218,19 @@ export function Home({subPath}: {subPath: string}) {
 
   useEffect(() => {
     console.log("[Config] got config from build time", getClientConfig());
-    useAccessStore.getState().fetch(subPath);
+    useAccessStore.getState().fetch().then(() => {
+      const strProdInfo = useAccessStore.getState().productionInfo;
+      const theProdInfo: ProductionInfo | undefined = 
+        strProdInfo === "undefined" ? undefined : JSON.parse(strProdInfo);
+      const mask = getMaskInfo(theProdInfo);
+      useChatStore.getState().initializeChat(mask);
+      const ragInfo = getVectorStoreInfo(theProdInfo);
+      const kgInfo = getKnowledgeGraphInfo(theProdInfo);
+      const models = getLLMModels(theProdInfo);
+      useRAGStore.getState().initializeRAG(ragInfo);
+      useKGStore.getState().initializeKG(kgInfo);
+      useAppConfig.getState().initializeConfig(models);
+    });
   }, []);
 
   if (!useHasHydrated()) {
@@ -224,3 +245,4 @@ export function Home({subPath}: {subPath: string}) {
     </ErrorBoundary>
   );
 }
+

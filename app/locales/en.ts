@@ -13,8 +13,8 @@ const en: LocaleType = {
       : "Unauthorized access, please enter access code in [auth](/#/auth) page, or enter your OpenAI API Key.",
   },
   Auth: {
-    Title: "Need Access Code",
-    Tips: "Please enter access code below",
+    Title: "Need OpenAI API Key",
+    Tips: "Please enter your OpenaAI API Key below",
     SubTips: "Or enter your OpenAI API Key",
     Input: "access code",
     Confirm: "Confirm",
@@ -116,6 +116,12 @@ const en: LocaleType = {
         }
       }
     },
+    Loading: {
+      OncoKB: "Calling OncoKB",
+      RAG: "Calling RAG",
+      KG: "Calling KG RAG",
+    },
+    TokenLimit: (x: any) => `The server's community daily token limit (${x} tokens) has been reached.  \n\n Please provide your OpenAI API key on the [auth](/#/auth) page to continue.`,
   },
   Export: {
     Title: "Export Messages",
@@ -194,10 +200,9 @@ const en: LocaleType = {
       Disclaimer: "For more information on the platform, please see our [preprint](https://arxiv.org/abs/2305.06488)!\nIf you'd like to contribute to the project, please find us on [GitHub](https://github.com/biocypher/biochatter-next) or [Zulip](https://biocypher.zulipchat.com/). We'd love to hear from you!",
       About: {
         Name: "About",
-        Title: "About",
-        Citation: "BioChatter is developed by a multicultural team over on [GitHub](https://github.com/biocypher) ([BioChatter](https://github.com/biocypher/biochatter), [BioChatter Server](https://github.com/biocypher/biochatter-server), [BioChatter Next](https://github.com/biocypher/biochatter-next), [BioChatter Light](https://github.com/biocypher/biochatter-light)), led by [Sebastian Lobentanzer](https://slobentanzer.github.io/). Biochatter Next was developed by Shaohong Feng and Cankun Wang, and is hosted by [BMBL](https://u.osu.edu/bmbl).",
-        ListTitle: "BioChatter is a tool to integrate biomedical research with current developments in Large Language Models in a user-friendly package. It works by setting up a topic-constrained conversation with a pre-trained language model. Optionally, auxiliary technologies such as knowledge graphs and vector databases can be seamlessly integrated into the conversations. The main benefits of this approach are:",
-        ListItems: [
+        Heading1: "About",
+        Body1: "BioChatter is a platform to integrate biomedical research with current developments in Large Language Models in a user-friendly package. It works by setting up a topic-constrained conversation with a pre-trained language model. Optionally, auxiliary technologies such as knowledge graphs, vector databases, and external APIs can be seamlessly integrated into the conversations. The main benefits of this approach are:",
+        ListItems1: [
           "Transparency to increase trust in the framework and LLM-driven insights",
           "Modularity of components: use any model, any prompt, and any database",
           "Native connectivity to BioCypher knowledge graphs and semantic search via vector database embeddings",
@@ -205,7 +210,8 @@ const en: LocaleType = {
           "Confidentiality of the shared data (as opposed to the ChatGPT interface, which allows storage and reuse of the user's prompts by OpenAI)"
         ],
         Heading2: "About the models",
-        Models: "We offer support of proprietary models via the OpenAI API, as well as open source models via deployment mechanisms such as the Xorbits Inference framework. We also allow running models fully browser based using web assembly integration. You can select models in the settings panel.",
+        Body2: "We offer support of proprietary models via OpenAI and Anthropic APIs, as well as open source models via deployment mechanisms such as the Xorbits Inference framework and LangChain. We are also working on running models fully browser-based using web assembly integration. You can select available models in the settings panel and context menu. Not all possible models are supported in this preview application.",
+        Citation: "BioChatter is developed by a multicultural team over on [GitHub](https://github.com/biocypher) ([BioChatter](https://github.com/biocypher/biochatter), [BioChatter Server](https://github.com/biocypher/biochatter-server), [BioChatter Next](https://github.com/biocypher/biochatter-next), [BioChatter Light](https://github.com/biocypher/biochatter-light)), led by [Sebastian Lobentanzer](https://slobentanzer.github.io/). Biochatter Next was developed by Shaohong Feng and Cankun Wang, and is hosted by [BMBL](https://u.osu.edu/bmbl).",
       },
       VersionInfo: (x: any) => (`BioChatter Next, version ${x}`),
     },
@@ -498,7 +504,10 @@ const en: LocaleType = {
       ResultsNum: {
         Label: "Number of results",
         subLabel: "How many results should be used to supplement the prompts",
-      }
+      },
+      useReflexion: {
+        Label: "Use Reflexion",
+      },
     }
   },
   RAG: {

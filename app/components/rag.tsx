@@ -23,7 +23,7 @@ import { InputRange } from "./input-range";
 import { useDebouncedCallback } from "use-debounce";
 import { requestAllVSDocuments, requestRemoveDocument, requestUploadFile, requestVSConnectionStatus } from "../client/datarequest";
 import { DbConfiguration } from "../utils/datatypes";
-import { getVectorStoreConnectionArgsToConnect, getVectorStoreConnectionArgsToDisplay } from "../utils/rag";
+import { getVectorStoreConnectionArgsToConnect, getVectorStoreConnectionArgsToDisplay, getVectorStoreServerGlobal } from "../utils/rag";
 
 const DEFAULT_PORT = "19530";
 const DEFAULT_HOST = "";
@@ -60,16 +60,17 @@ export function RAGPage() {
   const [connectionArgs, setConnectionArgs] = useState(
     getVectorStoreConnectionArgsToDisplay(ragConfig.connectionArgs, ragProdInfo.servers??[])
   );
+  const [globalVS, setGlobalVS] = useState(
+    getVectorStoreServerGlobal(ragConfig.connectionArgs, ragProdInfo.servers??[])
+  );
 
   const updateDocuments = useDebouncedCallback(async () => {
     const theConfig = ragStore.currentRAGConfig();
     console.log(`[updateDocuments] ${theConfig.connectionArgs.host}`);
-    console.log(`[updateDocuments] ${ragConfig.connectionArgs.host}`);
-    
     try {
       const res = await requestAllVSDocuments(
         getVectorStoreConnectionArgsToConnect(connectionArgs, ragProdInfo.servers??[]), 
-        theConfig.docIdsWorkspace,
+        globalVS ? undefined : theConfig.docIdsWorkspace,
         accessStore.subPath
       );
       const value = await res.json();
@@ -96,6 +97,8 @@ export function RAGPage() {
     const connectionArgsAddress = getVectorStoreConnectionArgsToConnect(
       connectionArgs, ragProdInfo.servers??[]
     );
+    const theGlobalVS = getVectorStoreServerGlobal(connectionArgs, ragProdInfo.servers??[]);
+    setGlobalVS(theGlobalVS);
     try {
       const res = await requestVSConnectionStatus(
         connectionArgsAddress, accessStore.subPath
@@ -148,18 +151,20 @@ export function RAGPage() {
       updateDocuments();
     }
   }
-  async function onRemoveDocument(docId: string) {
+  async function onRemoveDocument(docId: string, docName: string) {
     if (docId.length === 0) {
       return;
     }
-    if (!await showConfirm(`Are you sure to remove the document?`)) {
+    if (!await showConfirm(`Are you sure to remove the document ${docName}?`)) {
       return;
     }
     try {
       const res = await requestRemoveDocument(
         ragConfig.connectionArgs,
         docId,
-        ragConfig.docIdsWorkspace,
+        (ragConfig.docIdsWorkspace !== undefined &&
+          ragConfig.docIdsWorkspace.length > 0) ? 
+          ragConfig.docIdsWorkspace : [docId],
         accessStore.subPath
       )      
       if (!res.ok) {
@@ -179,17 +184,17 @@ export function RAGPage() {
     }
     updateDocuments();
   }
-  const make_remove_function = (docId: string) => {
+  const make_remove_function = (docId: string, docName: string) => {
     return () => {
-      onRemoveDocument(docId);
+      onRemoveDocument(docId, docName);
     }
   }
-  function DocumentComponent({ doc }: { doc: any }) {
+  function DocumentComponent({ doc, removable }: { doc: any, removable: boolean }) {
     return (
       <div className={styles["document-item"]}>
         <div className={styles["document-label"]}>{getDocumentName(doc)}</div>
         <div className={styles["document-stretch-area"]}></div>
-        <div className={`${styles["document-remove-icon"]} clickable`} onClick={make_remove_function(doc.id)}><ClearIcon /></div>
+        {removable && <div className={`${styles["document-remove-icon"]} clickable`} onClick={make_remove_function(doc.id, getDocumentName(doc))}><ClearIcon /></div>}
       </div>
     )
   }
@@ -235,13 +240,13 @@ export function RAGPage() {
                   <div className={`${styles["feature-hints"]} snippet primary`}>
                     {Locale.RAG.Documents.DocumentsPrompts}
                   </div>
-                  <div className={styles["feature-hints"]}>
+                  {!globalVS && <div className={styles["feature-hints"]}>
                     <ReactDropZone
                       disabled={!ragStore.useRAG}
                       accept={{ "application/pdf": ["application/pdf"], "text/plain": ["text/plain"] }}
                       onUpload={onUpload}
                     />
-                  </div>
+                  </div>}
                   {(uploading) ? (
                     <div className={styles["uploading-prompts"]}>
                       <div style={{ marginLeft: 5, marginRight: 5 }}>
@@ -252,10 +257,10 @@ export function RAGPage() {
                     </div>
                   ) : (<></>)}
                   <div className={styles["documents"]}>
-                    <ul>
+                    <ul style={{listStyleType: "square"}}>
                       {documents.map((doc) => (
                         <li key={doc.id ?? ""}>
-                          <DocumentComponent doc={doc} />
+                          <DocumentComponent doc={doc} removable={!globalVS} />
                         </li>
                       ))}
                     </ul>
