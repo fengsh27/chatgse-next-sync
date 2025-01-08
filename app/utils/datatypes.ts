@@ -1,3 +1,4 @@
+import { LLMModel } from "../client/api";
 import { Mask } from "../store/mask";
 
 export interface DbConnectionArgs {
@@ -13,6 +14,7 @@ export interface DbServerSettings {
   port?: string;
   number_of_results?: number;
   description: string;
+  global?: boolean;
 }
 
 export interface DbConfiguration {
@@ -45,4 +47,5 @@ export interface ProductionInfo {
   VectorStore?: DbConfiguration;
   OncoKBAPI?: APIAgentInfo;
   Text?: TextConfiguration;
+  LLMModels?: Array<LLMModel>;
 }

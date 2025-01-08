@@ -535,12 +535,6 @@ export function ChatActions(props: {
             });
           }}
         />
-
-        <ChatAction
-          onClick={() => setShowModelSelector(true)}
-          text={currentModel}
-          icon={<RobotIcon />}
-        />
         <ChatAction
           onClick={props.showRagPromptModal}
           icon={<BrainIcon />}
@@ -590,7 +584,13 @@ export function ChatActions(props: {
               checked={chatStore.currentSession().useOncoKBSession}
               onChange={(e) => (
                 chatStore.updateCurrentSession(
-                  (session) => (session.useOncoKBSession = e.currentTarget.checked)
+                  (session) => {
+                    session.useOncoKBSession = e.currentTarget.checked;
+                    if (session.useOncoKBSession) {
+                      session.useKGSession = false;
+                      session.useRAGSession = false;
+                    }
+                  }
                 )
               )}
             />
@@ -606,7 +606,13 @@ export function ChatActions(props: {
               checked={chatStore.currentSession().useRAGSession}
               onChange={(e) => (
                 chatStore.updateCurrentSession(
-                  (session) => (session.useRAGSession = e.currentTarget.checked)
+                  (session) => {
+                    session.useRAGSession = e.currentTarget.checked;
+                    if (session.useRAGSession) {
+                      session.useKGSession = false;
+                      session.useOncoKBSession = false;
+                    }
+                  }
                 )
               )}
             />
@@ -622,7 +628,13 @@ export function ChatActions(props: {
               checked={chatStore.currentSession().useKGSession}
               onChange={(e) => (
                 chatStore.updateCurrentSession(
-                  (session) => (session.useKGSession = e.currentTarget.checked)
+                  (session) => {
+                    session.useKGSession = e.currentTarget.checked;
+                    if (session.useKGSession) {
+                      session.useRAGSession = false;
+                      session.useOncoKBSession = false;
+                    }
+                  }
                 )
               )}
             />
@@ -954,6 +966,22 @@ function _Chat() {
       },
     });
   };
+
+  const getLoadingText = (
+    useOncoKB: boolean,
+    useRAG: boolean,
+    useKG: boolean,
+  ): string | undefined => {
+    if (useOncoKB) {
+      return Locale.Chat.Loading.OncoKB;
+    } else if (useRAG) {
+      return Locale.Chat.Loading.RAG;
+    } else if (useKG) {
+      return Locale.Chat.Loading.KG;
+    } else {
+      return undefined;
+    }
+  }
 
   const context: RenderMessage[] = useMemo(() => {
     return session.mask.hideContext ? [] : session.mask.context.slice();
@@ -1329,6 +1357,13 @@ function _Chat() {
                         (message.preview || message.streaming) &&
                         message.content.length === 0 &&
                         !isUser
+                      }
+                      loadingText={
+                        ((message.preview || message.streaming) &&
+                        message.content.length === 0 &&
+                        !isUser) ? 
+                        (getLoadingText(session.useOncoKBSession, session.useRAGSession, session.useKGSession)) : 
+                        undefined
                       }
                       onContextMenu={(e) => onRightClick(e, message)}
                       onDoubleClickCapture={() => {

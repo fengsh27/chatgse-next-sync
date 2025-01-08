@@ -2,7 +2,7 @@
   "name": "biochatter-next",
   "private": false,
   "license": "MIT",
-  "version": "1.2.0",
+  "version": "1.4.0",
   "scripts": {
     "dev": "ts-node server.ts",
     "build": "cross-env BUILD_MODE=standalone next build",
