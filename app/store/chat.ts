@@ -169,10 +169,37 @@ export const useChatStore = createPersistStore(
         }));
       },
 
+      initializeChat(mask?: Mask) {
+        if (!mask) {
+          return;
+        }
+        const sessions = _get().sessions;
+        if (sessions.length === 1 && sessions[0].messages.length === 0) {
+          const config = useAppConfig.getState();
+          this.updateCurrentSession((session: ChatSession) => {
+            session.topic = mask.name;
+            session.mask = {
+              ...mask,
+              modelConfig: {
+                ...config.modelConfig,
+                ...mask.modelConfig,
+              }
+            }
+          });
+        }
+      },
       selectSession(index: number) {
         set({
           currentSessionIndex: index,
         });
+
+        // on session changed
+        if (index >= get().sessions.length) {
+          return;
+        }
+        const model = get().sessions[index].mask?.modelConfig?.model ?? "gpt-3.5-turbo";
+        const sessionId = get().sessions[index].id;
+        useAccessStore.getState().updateTokenUsage(sessionId, model);
       },
 
       moveSession(from: number, to: number) {
@@ -388,6 +415,7 @@ export const useChatStore = createPersistStore(
               get().onNewMessage(botMessage);
             }
             ChatControllerPool.remove(session.id, botMessage.id);
+            useAccessStore.getState().updateTokenUsage(session.id, modelConfig.model);
           },
           onError(error) {
             const isAborted = error.message.includes("aborted");
