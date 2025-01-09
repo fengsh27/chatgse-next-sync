@@ -84,7 +84,7 @@ export const useAccessStore = createPersistStore(
       fetchState = 1;
       try {
         const url = getFetchUrl(subPath??"", "/api/config")
-        const res = await fetch("/api/config", {
+        const res = await fetch(url, {
           method: "post",
           body: null,
           headers: {
