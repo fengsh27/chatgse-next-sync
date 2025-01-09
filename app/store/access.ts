@@ -9,6 +9,7 @@ import { getClientConfig } from "../config/client";
 import { createPersistStore } from "../utils/store";
 import { ensure } from "../utils/clone";
 import { getFetchUrl } from "../utils/utils";
+import { requestTokenUsage } from "../client/datarequest";
 
 let fetchState = 0; // 0 not fetch, 1 fetching, 2 done
 
@@ -39,6 +40,14 @@ const DEFAULT_ACCESS_STATE = {
   customModels: "",
   subPath: "",
   productionInfo: "undefined",
+  tokenUsage: {
+    auth_type: "Unknown",
+    tokens: {
+      "completion_tokens": 0,
+      "prompt_tokens": 0,
+      "total_tokens": 0,
+    }
+  }
 };
 
 export const useAccessStore = createPersistStore(
@@ -70,33 +79,48 @@ export const useAccessStore = createPersistStore(
         (this.enabledAccessControl() && ensure(get(), ["accessCode"]))
       );
     },
-    fetch(subPath?: string) {
+    async fetch(subPath?: string) {
       if (fetchState > 0 || getClientConfig()?.buildMode === "export") return;
       fetchState = 1;
-      const url = getFetchUrl(subPath??"", "/api/config")
-      fetch(url, {
-        method: "post",
-        body: null,
-        headers: {
-          ...getHeaders(),
-        },
-      })
-        .then((res) => res.json())
-        .then((res: DangerConfig) => {
-          console.log("[Config] got config from server", res);
-          set(() => ({ ...res }));
-        })
-        .catch(() => {
-          console.error("[Config] failed to fetch config");
-        })
-        .finally(() => {
-          fetchState = 2;
+      try {
+        const url = getFetchUrl(subPath??"", "/api/config")
+        const res = await fetch(url, {
+          method: "post",
+          body: null,
+          headers: {
+            ...getHeaders(),
+          },
         });
+        const jsonBody:DangerConfig = await res.json();
+        console.log("[Config] got config from server", jsonBody);
+        set(() => ({...jsonBody}));
+      } catch (_e: any) {
+        console.error("[Config] failed to fetch config");
+      } finally {
+        fetchState = 2;
+      }        
+    },
+    async updateTokenUsage(session_id: string, model: string) {
+      const subPath = get().subPath;
+      requestTokenUsage(session_id, model, subPath).then((res: any) => {
+        res.json().then((dat: any) => {
+          set({
+            tokenUsage: {
+              auth_type: dat.auth_type ?? "Unknown",
+              tokens: {
+                completion_tokens: dat.tokens?.completion_tokens ?? 0,
+                prompt_tokens: dat.tokens?.prompt_tokens ?? 0,
+                total_tokens: dat.tokens?.total_tokens ?? 0,
+              }
+            }
+          });
+        });
+      });
     },
   }),
   {
     name: StoreKey.Access,
-    version: 2.1,
+    version: 2.2,
     migrate(persistedState, version) {
       if (version < 2) {
         const state = persistedState as {
@@ -112,6 +136,24 @@ export const useAccessStore = createPersistStore(
           productionInfo: string;
         }
         state.productionInfo = "undefined";
+      }
+      if (version < 2.2) {
+        const state = persistedState as {
+          tokenUsage: {
+            auth_type: string,
+            tokens: {
+              "completion_tokens": number,
+              "prompt_tokens": number,
+              "total_tokens": number,
+            }
+          }
+        }
+        state.tokenUsage.auth_type = "Unknown";
+        state.tokenUsage.tokens = {
+          "completion_tokens": 0,
+          "prompt_tokens": 0,
+          "total_tokens": 0,
+        }
       }
 
       return persistedState as any;

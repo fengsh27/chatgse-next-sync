@@ -7,6 +7,7 @@ import {
   ProductionInfo 
 } from "./datatypes";
 import Locale  from "../locales";
+import { LLMModel } from "../client/api";
 
 export function getOncoKBInfo(prodInfo?: ProductionInfo): APIAgentInfo {
   return (prodInfo?.OncoKBAPI ?? {enabled: true})
@@ -18,6 +19,9 @@ export function getKnowledgeGraphInfo(prodInfo?: ProductionInfo): DbConfiguratio
 
 export function getVectorStoreInfo(prodInfo?: ProductionInfo): DbConfiguration {
   return (prodInfo?.VectorStore ?? {servers: [], enabled: true});
+}
+export function getLLMModels(prodInfo?: ProductionInfo): Array<LLMModel> | undefined {
+  return prodInfo?.LLMModels;
 }
 
 export function selectServerInfoFromDbConnectionArgs(
@@ -71,6 +75,6 @@ export function getWelcomeHowMessages(prodInfo?: ProductionInfo): Array<string> 
   }
 }
 export function getMaskInfo(prodInfo?: ProductionInfo): Mask | undefined {
-  return prodInfo?.Text?.Masks? prodInfo.Text.Masks[0] : undefined;
+  return prodInfo?.Text?.Masks ? prodInfo.Text.Masks[0] : undefined;
 }
 
