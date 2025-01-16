@@ -561,19 +561,6 @@ export function ChatActions(props: {
         )}
       </div>
       <div className={styles["chat-toggle-group"]}>
-        {enabledAgentsNum > 1 && (
-          <div className={styles["chat-toggle"]}>
-            <label>Auto</label>
-            <input
-              type="checkbox"
-              checked={chatStore.currentSession().useAutoAgentSession}
-              onChange={(e) => (
-                chatStore.updateCurrentSession(
-                  (session) => (session.useAutoAgentSession = e.currentTarget.checked)
-                )
-              )} />
-          </div>
-        )}
         {oncokbInfo.enabled && (
           <div className={styles["chat-toggle"]}>
             <label>OncoKB</label>
