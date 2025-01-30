@@ -1,9 +1,10 @@
+import { type Metadata } from "next";
+import Script from "next/script";
 /* eslint-disable @next/next/no-page-custom-font */
 import "./styles/globals.scss";
 import "./styles/markdown.scss";
 import "./styles/highlight.scss";
 import { getClientConfig } from "./config/client";
-import { type Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "BioChatter",
@@ -34,6 +35,22 @@ export default function RootLayout({
         <meta name="config" content={JSON.stringify(getClientConfig())} />
         <link rel="manifest" href="/site.webmanifest"></link>
         <script src="/serviceWorkerRegister.js" defer></script>
+        <Script 
+          src="https://www.googletagmanager.com/gtag/js?id=G-HXM4637NDK"
+          strategy="afterInteractive"
+        ></Script>
+        <Script
+          id="gtag-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-HXM4637NDK');
+          `}}
+        >
+        </Script>
       </head>
       <body>{children}</body>
     </html>
